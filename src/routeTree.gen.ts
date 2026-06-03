@@ -13,11 +13,11 @@ import { Route as JoinRouteImport } from './routes/join'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as AuthenticatedMatchesRouteImport } from './routes/_authenticated/matches'
-import { Route as AuthenticatedLadderRouteImport } from './routes/_authenticated/ladder'
-import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
-import { Route as AuthenticatedChallengesRouteImport } from './routes/_authenticated/challenges'
-import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
+import { Route as AuthenticatedMatchesRouteImport } from './routes/_authenticated.matches'
+import { Route as AuthenticatedLadderRouteImport } from './routes/_authenticated.ladder'
+import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated.dashboard'
+import { Route as AuthenticatedChallengesRouteImport } from './routes/_authenticated.challenges'
+import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated.admin'
 
 const JoinRoute = JoinRouteImport.update({
   id: '/join',
