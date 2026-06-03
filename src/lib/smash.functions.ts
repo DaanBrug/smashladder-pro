@@ -74,8 +74,9 @@ export const getLadder = createServerFn({ method: "GET" })
     ]);
     const userIds = Array.from(new Set([...(rankings ?? []).map((r: any) => r.user_id), ...(regs ?? []).map((r: any) => r.user_id)]));
     const { data: profiles } = userIds.length
-      ? await supabase.from("profiles").select("id, display_name, email").in("id", userIds)
+      ? await supabase.from("profiles").select("id, display_name").in("id", userIds)
       : { data: [] };
+
     const byId = new Map((profiles ?? []).map((p: any) => [p.id, p]));
     const rows = (rankings ?? []).map((r: any) => ({
       position: r.position,
