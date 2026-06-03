@@ -51,14 +51,14 @@ export const getMe = createServerFn({ method: "GET" })
   .handler(async ({ context }) => {
     const { supabase, userId } = context;
     await sweep(supabase);
-    const [{ data: profile }, comp, { data: admins }] = await Promise.all([
-      supabase.from("profiles").select("*").eq("id", userId).maybeSingle(),
+    const [{ data: profile }, comp, { data: isAdminData }] = await Promise.all([
+      supabase.from("profiles").select("id, display_name, avatar_url, created_at").eq("id", userId).maybeSingle(),
       getCompetition(supabase),
-      supabase.from("app_admins").select("email"),
+      supabase.rpc("is_admin", { _user: userId }),
     ]);
-    const adminEmails = new Set((admins ?? []).map((a: any) => a.email));
-    const isAdmin = !!profile && adminEmails.has(profile.email);
+    const isAdmin = !!isAdminData;
     return { profile, competition: comp, isAdmin };
+
   });
 
 export const getLadder = createServerFn({ method: "GET" })
@@ -74,8 +74,9 @@ export const getLadder = createServerFn({ method: "GET" })
     ]);
     const userIds = Array.from(new Set([...(rankings ?? []).map((r: any) => r.user_id), ...(regs ?? []).map((r: any) => r.user_id)]));
     const { data: profiles } = userIds.length
-      ? await supabase.from("profiles").select("id, display_name, email").in("id", userIds)
+      ? await supabase.from("profiles").select("id, display_name").in("id", userIds)
       : { data: [] };
+
     const byId = new Map((profiles ?? []).map((p: any) => [p.id, p]));
     const rows = (rankings ?? []).map((r: any) => ({
       position: r.position,
@@ -298,11 +299,11 @@ export const markNotificationsRead = createServerFn({ method: "POST" })
 // ---------- admin ----------
 
 async function assertAdmin(supabase: any, userId: string) {
-  const { data: profile } = await supabase.from("profiles").select("email").eq("id", userId).maybeSingle();
-  if (!profile) throw new Error("Profile missing.");
-  const { data: admins } = await supabase.from("app_admins").select("email").eq("email", profile.email).maybeSingle();
-  if (!admins) throw new Error("Admin only.");
+  const { data: isAdmin, error } = await supabase.rpc("is_admin", { _user: userId });
+  if (error) throw new Error(error.message);
+  if (!isAdmin) throw new Error("Admin only.");
 }
+
 
 export const seedLadder = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
