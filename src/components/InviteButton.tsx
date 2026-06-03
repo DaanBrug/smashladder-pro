@@ -80,6 +80,13 @@ export function InviteButton() {
           </DialogDescription>
         </DialogHeader>
 
+        {showPublishWarning && (
+          <div className="rounded-md border border-amber-500/40 bg-amber-500/10 p-3 text-xs text-amber-200">
+            Let op: publiceer eerst je app via de <strong>Publish</strong>-knop rechtsboven, anders moeten ontvangers eerst inloggen bij Lovable om de uitnodiging te openen. De link hieronder wijst al naar je publieke app-URL.
+          </div>
+        )}
+
+
         <div className="flex justify-center rounded-lg bg-white p-4">
           <QRCodeSVG value={joinUrl} size={200} />
         </div>
