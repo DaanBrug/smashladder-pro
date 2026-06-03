@@ -16,8 +16,24 @@ export function InviteButton() {
   const [open, setOpen] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  const joinUrl =
-    typeof window !== "undefined" ? `${window.location.origin}/join` : "/join";
+  const PROJECT_ID = "7de12d3f-1ae2-4d4d-ad43-22ec1c88e4d4";
+  const PUBLIC_ORIGIN = `https://project--${PROJECT_ID}.lovable.app`;
+
+  const currentHost = typeof window !== "undefined" ? window.location.hostname : "";
+  const isPreviewHost =
+    currentHost.startsWith("id-preview--") ||
+    currentHost.startsWith("preview--") ||
+    currentHost.endsWith(".lovableproject.com");
+  const isCustomOrLovableApp =
+    typeof window !== "undefined" &&
+    !isPreviewHost &&
+    currentHost !== "" &&
+    currentHost !== "localhost";
+
+  const origin = isCustomOrLovableApp ? window.location.origin : PUBLIC_ORIGIN;
+  const joinUrl = `${origin}/join`;
+  const showPublishWarning = isPreviewHost;
+
 
   const copy = async () => {
     try {
