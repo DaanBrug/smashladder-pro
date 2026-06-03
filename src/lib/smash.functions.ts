@@ -39,27 +39,9 @@ async function getCompetition(supabase: any) {
   return data;
 }
 
-async function sweep(supabase: any) {
-  // call SECURITY DEFINER via RPC requires grant; use plain updates via service-bound queries
-  // (this is fine: each call respects RLS, but only writes to status fields the policies allow via service_role through admin client)
-  // Simpler: hit the public sweep RPC — we revoked it from authenticated, so do it inline:
-  await supabase
-    .from("challenges")
-    .update({ status: "expired" })
-    .lt("expires_at", new Date().toISOString())
-    .eq("status", "pending");
-  // auto-confirm overdue matches: we need to apply the ranking change, so route through admin
-  const { data: stale } = await supabase
-    .from("matches")
-    .select("id")
-    .lt("confirm_deadline", new Date().toISOString())
-    .eq("status", "pending_confirmation");
-  if (stale && stale.length > 0) {
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    for (const m of stale) {
-      await supabaseAdmin.rpc("finalize_match", { _match: m.id, _auto: true });
-    }
-  }
+async function sweep(_supabase: any) {
+  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  await supabaseAdmin.rpc("sweep_timeouts");
 }
 
 // ---------- queries ----------
