@@ -6,6 +6,7 @@ import { getMe, getLadder, getMyChallenges, getMatches, joinCompetition } from "
 import { Button } from "@/components/ui/button";
 import { Swords, ListOrdered, Timer, Trophy } from "lucide-react";
 import { toast } from "sonner";
+import { InviteButton } from "@/components/InviteButton";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({ meta: [{ title: "Dashboard — SmashRanking" }] }),
