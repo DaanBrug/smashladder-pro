@@ -14,16 +14,329 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      app_admins: {
+        Row: {
+          email: string
+        }
+        Insert: {
+          email: string
+        }
+        Update: {
+          email?: string
+        }
+        Relationships: []
+      }
+      audit_log: {
+        Row: {
+          action: string
+          actor_id: string | null
+          created_at: string
+          id: string
+          target: Json
+        }
+        Insert: {
+          action: string
+          actor_id?: string | null
+          created_at?: string
+          id?: string
+          target?: Json
+        }
+        Update: {
+          action?: string
+          actor_id?: string | null
+          created_at?: string
+          id?: string
+          target?: Json
+        }
+        Relationships: []
+      }
+      challenges: {
+        Row: {
+          challenger_id: string
+          competition_id: string
+          created_at: string
+          expires_at: string
+          id: string
+          opponent_id: string
+          responded_at: string | null
+          status: Database["public"]["Enums"]["challenge_status"]
+        }
+        Insert: {
+          challenger_id: string
+          competition_id: string
+          created_at?: string
+          expires_at?: string
+          id?: string
+          opponent_id: string
+          responded_at?: string | null
+          status?: Database["public"]["Enums"]["challenge_status"]
+        }
+        Update: {
+          challenger_id?: string
+          competition_id?: string
+          created_at?: string
+          expires_at?: string
+          id?: string
+          opponent_id?: string
+          responded_at?: string | null
+          status?: Database["public"]["Enums"]["challenge_status"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "challenges_competition_id_fkey"
+            columns: ["competition_id"]
+            isOneToOne: false
+            referencedRelation: "competition"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      competition: {
+        Row: {
+          created_at: string
+          ends_at: string | null
+          id: string
+          location: string | null
+          name: string
+          registration_closes_at: string | null
+          registration_opens_at: string | null
+          starts_at: string | null
+          status: Database["public"]["Enums"]["competition_status"]
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          ends_at?: string | null
+          id?: string
+          location?: string | null
+          name: string
+          registration_closes_at?: string | null
+          registration_opens_at?: string | null
+          starts_at?: string | null
+          status?: Database["public"]["Enums"]["competition_status"]
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          ends_at?: string | null
+          id?: string
+          location?: string | null
+          name?: string
+          registration_closes_at?: string | null
+          registration_opens_at?: string | null
+          starts_at?: string | null
+          status?: Database["public"]["Enums"]["competition_status"]
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      matches: {
+        Row: {
+          challenge_id: string | null
+          competition_id: string
+          confirm_deadline: string
+          confirmed_at: string | null
+          id: string
+          loser_id: string
+          played_on: string
+          pre_loser_pos: number | null
+          pre_winner_pos: number | null
+          sets: Json
+          status: Database["public"]["Enums"]["match_status"]
+          submitted_at: string
+          submitted_by: string
+          winner_id: string
+        }
+        Insert: {
+          challenge_id?: string | null
+          competition_id: string
+          confirm_deadline?: string
+          confirmed_at?: string | null
+          id?: string
+          loser_id: string
+          played_on?: string
+          pre_loser_pos?: number | null
+          pre_winner_pos?: number | null
+          sets: Json
+          status?: Database["public"]["Enums"]["match_status"]
+          submitted_at?: string
+          submitted_by: string
+          winner_id: string
+        }
+        Update: {
+          challenge_id?: string | null
+          competition_id?: string
+          confirm_deadline?: string
+          confirmed_at?: string | null
+          id?: string
+          loser_id?: string
+          played_on?: string
+          pre_loser_pos?: number | null
+          pre_winner_pos?: number | null
+          sets?: Json
+          status?: Database["public"]["Enums"]["match_status"]
+          submitted_at?: string
+          submitted_by?: string
+          winner_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "matches_challenge_id_fkey"
+            columns: ["challenge_id"]
+            isOneToOne: false
+            referencedRelation: "challenges"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "matches_competition_id_fkey"
+            columns: ["competition_id"]
+            isOneToOne: false
+            referencedRelation: "competition"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notifications: {
+        Row: {
+          created_at: string
+          id: string
+          payload: Json
+          read_at: string | null
+          type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          payload?: Json
+          read_at?: string | null
+          type: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          payload?: Json
+          read_at?: string | null
+          type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          display_name: string
+          email: string
+          id: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          display_name: string
+          email: string
+          id: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string
+          email?: string
+          id?: string
+        }
+        Relationships: []
+      }
+      rankings: {
+        Row: {
+          competition_id: string
+          id: string
+          position: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          competition_id: string
+          id?: string
+          position: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          competition_id?: string
+          id?: string
+          position?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "rankings_competition_id_fkey"
+            columns: ["competition_id"]
+            isOneToOne: false
+            referencedRelation: "competition"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      registrations: {
+        Row: {
+          competition_id: string
+          id: string
+          joined_at: string
+          user_id: string
+        }
+        Insert: {
+          competition_id: string
+          id?: string
+          joined_at?: string
+          user_id: string
+        }
+        Update: {
+          competition_id?: string
+          id?: string
+          joined_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "registrations_competition_id_fkey"
+            columns: ["competition_id"]
+            isOneToOne: false
+            referencedRelation: "competition"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      apply_sliding_rule: {
+        Args: { _competition: string; _loser: string; _winner: string }
+        Returns: undefined
+      }
+      finalize_match: {
+        Args: { _auto: boolean; _match: string }
+        Returns: undefined
+      }
+      is_admin: { Args: { _user: string }; Returns: boolean }
+      sweep_timeouts: { Args: never; Returns: undefined }
     }
     Enums: {
-      [_ in never]: never
+      challenge_status:
+        | "pending"
+        | "accepted"
+        | "declined"
+        | "expired"
+        | "completed"
+      competition_status: "draft" | "registration" | "active" | "finished"
+      match_status:
+        | "pending_confirmation"
+        | "confirmed"
+        | "auto_confirmed"
+        | "disputed"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +463,21 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      challenge_status: [
+        "pending",
+        "accepted",
+        "declined",
+        "expired",
+        "completed",
+      ],
+      competition_status: ["draft", "registration", "active", "finished"],
+      match_status: [
+        "pending_confirmation",
+        "confirmed",
+        "auto_confirmed",
+        "disputed",
+      ],
+    },
   },
 } as const
