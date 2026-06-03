@@ -6,6 +6,7 @@ import { getMe, getLadder, getMyChallenges, getMatches, joinCompetition } from "
 import { Button } from "@/components/ui/button";
 import { Swords, ListOrdered, Timer, Trophy } from "lucide-react";
 import { toast } from "sonner";
+import { InviteButton } from "@/components/InviteButton";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({ meta: [{ title: "Dashboard — SmashRanking" }] }),
@@ -36,14 +37,17 @@ function Dashboard() {
 
   return (
     <AppShell>
-      <div className="mb-6">
-        <h1 className="font-display text-3xl font-bold uppercase tracking-wide">
-          Welcome back{meQ.data?.profile?.display_name ? `, ${meQ.data.profile.display_name}` : ""}.
-        </h1>
-        <p className="text-sm text-muted-foreground">
-          {ladderQ.data?.competition?.name} · status:{" "}
-          <span className="font-semibold text-foreground">{ladderQ.data?.competition?.status ?? "—"}</span>
-        </p>
+      <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <h1 className="font-display text-3xl font-bold uppercase tracking-wide">
+            Welcome back{meQ.data?.profile?.display_name ? `, ${meQ.data.profile.display_name}` : ""}.
+          </h1>
+          <p className="text-sm text-muted-foreground">
+            {ladderQ.data?.competition?.name} · status:{" "}
+            <span className="font-semibold text-foreground">{ladderQ.data?.competition?.status ?? "—"}</span>
+          </p>
+        </div>
+        <InviteButton />
       </div>
 
       {!isRegistered && ladderQ.data?.competition && (
