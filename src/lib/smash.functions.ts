@@ -51,14 +51,14 @@ export const getMe = createServerFn({ method: "GET" })
   .handler(async ({ context }) => {
     const { supabase, userId } = context;
     await sweep(supabase);
-    const [{ data: profile }, comp, { data: admins }] = await Promise.all([
-      supabase.from("profiles").select("*").eq("id", userId).maybeSingle(),
+    const [{ data: profile }, comp, { data: isAdminData }] = await Promise.all([
+      supabase.from("profiles").select("id, display_name, avatar_url, created_at").eq("id", userId).maybeSingle(),
       getCompetition(supabase),
-      supabase.from("app_admins").select("email"),
+      supabase.rpc("is_admin", { _user: userId }),
     ]);
-    const adminEmails = new Set((admins ?? []).map((a: any) => a.email));
-    const isAdmin = !!profile && adminEmails.has(profile.email);
+    const isAdmin = !!isAdminData;
     return { profile, competition: comp, isAdmin };
+
   });
 
 export const getLadder = createServerFn({ method: "GET" })
