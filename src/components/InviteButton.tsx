@@ -50,10 +50,11 @@ export function InviteButton() {
     if (navigator.share) {
       try {
         await navigator.share({
-          title: "Doe mee met SmashRanking",
-          text: "Join de tennis ladder competitie:",
+          title: "SmashRanking — doe mee met de ladder",
+          text: "Doe mee met onze tennis ladder competitie:",
           url: joinUrl,
         });
+
       } catch {
         /* user cancelled */
       }
