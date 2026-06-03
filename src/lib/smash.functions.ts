@@ -299,11 +299,11 @@ export const markNotificationsRead = createServerFn({ method: "POST" })
 // ---------- admin ----------
 
 async function assertAdmin(supabase: any, userId: string) {
-  const { data: profile } = await supabase.from("profiles").select("email").eq("id", userId).maybeSingle();
-  if (!profile) throw new Error("Profile missing.");
-  const { data: admins } = await supabase.from("app_admins").select("email").eq("email", profile.email).maybeSingle();
-  if (!admins) throw new Error("Admin only.");
+  const { data: isAdmin, error } = await supabase.rpc("is_admin", { _user: userId });
+  if (error) throw new Error(error.message);
+  if (!isAdmin) throw new Error("Admin only.");
 }
+
 
 export const seedLadder = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
