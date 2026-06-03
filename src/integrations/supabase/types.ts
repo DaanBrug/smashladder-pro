@@ -321,6 +321,7 @@ export type Database = {
         Args: { _auto: boolean; _match: string }
         Returns: undefined
       }
+      get_my_email: { Args: never; Returns: string }
       is_admin: { Args: { _user: string }; Returns: boolean }
       sweep_timeouts: { Args: never; Returns: undefined }
     }
